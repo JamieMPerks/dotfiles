@@ -1,0 +1,24 @@
+#!/bin/sh
+# ~/.local/bin/autostart — startup apps for DWM
+
+if command -v feh >/dev/null 2>&1; then
+    feh --bg-fill "$HOME/.local/share/wallpapers/default.jpg" &
+fi
+
+if command -v nm-applet >/dev/null 2>&1; then
+    pgrep nm-applet >/dev/null || nm-applet &
+fi
+
+if command -v blueman-applet >/dev/null 2>&1; then
+    pgrep blueman-applet >/dev/null || blueman-applet &
+fi
+
+if command -v dunst >/dev/null 2>&1; then
+    pgrep dunst >/dev/null || dunst &
+fi
+
+if command -v light >/dev/null 2>&1; then
+    light -S 40 &
+fi
+
+echo "Autostart executed at $(date)" >> "$HOME/.cache/dwm-startup.log"
