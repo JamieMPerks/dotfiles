@@ -124,6 +124,16 @@ command = "tuigreet --cmd startx --remember --time"
 user = "greeter"
 EOF
 
+# ──────────────  Create PAM configuration for greetd  ──────────────
+sudo tee /etc/pam.d/greetd >/dev/null <<'EOF'
+# PAM service for greetd (TUI login manager)
+auth        include        login
+account     include        login
+password    include        login
+session     include        login
+EOF
+sudo chmod 644 /etc/pam.d/greetd
+
 sudo tee /etc/systemd/system/greetd.service >/dev/null <<'EOF'
 [Unit]
 Description=greetd login manager
