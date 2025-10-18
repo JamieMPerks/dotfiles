@@ -1,0 +1,15 @@
+[Unit]
+Description=greetd login manager
+After=systemd-user-sessions.service
+
+[Service]
+ExecStart=/usr/local/bin/greetd
+StandardInput=tty
+StandardOutput=tty
+StandardError=journal
+Restart=always
+RestartSec=1
+TTYPath=/dev/tty2
+
+[Install]
+WantedBy=multi-user.target
