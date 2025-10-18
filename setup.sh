@@ -158,10 +158,10 @@ sudo systemctl start greetd
 # ────────────────────── XINITRC + AUTOSTART CREATION  ──────────────────────
 echo "[+] Creating default ~/.xinitrc and autostart scripts..."
 
-# Create X init configuration
-mkdir -p "$HOME/.config/xorg" "$HOME/.local/bin" "$HOME/.local/share/wallpapers"
+USER_HOME="$(getent passwd $USER | cut -d: -f6)"
+mkdir -p "$USER_HOME/.config/xorg" "$USER_HOME/.local/bin" "$USER_HOME/.local/share/wallpapers"
 
-cat <<'EOF' > "$HOME/.config/xorg/xinitrc"
+cat <<'EOF' > "$USER_HOME/.config/xorg/xinitrc"
 #!/bin/sh
 # ~/.xinitrc — starts DWM session for Debian minimal setup
 
@@ -199,8 +199,9 @@ fi
 exec dwm
 EOF
 
-ln -sf "$HOME/.config/xorg/xinitrc" "$HOME/.xinitrc"
-chmod +x "$HOME/.config/xorg/xinitrc"
+ln -sf "$USER_HOME/.config/xorg/xinitrc" "$USER_HOME/.xinitrc"
+chmod +x "$USER_HOME/.config/xorg/xinitrc"
+chown -R "$USER:$USER" "$USER_HOME/.config" "$USER_HOME/.local"
 
 # ────────────────────── AUTOSTART  ──────────────────────
 cat <<'EOF' > "$HOME/.local/bin/autostart"
