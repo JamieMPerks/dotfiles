@@ -193,7 +193,7 @@ After reboot:
 | Action | Key combo |
 |---------|------------|
 | Open terminal | `Alt + Shift + Enter` |
-| Run dmenu | `Alt + d` |
+| Run dmenu | `Alt + p` |
 | Close window | `Alt + Shift + c` |
 | Quit DWM | `Alt + Shift + q` |
 
