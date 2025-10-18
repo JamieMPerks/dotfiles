@@ -17,7 +17,7 @@ echo "[+] $USERNAME added to sudo group."
 sleep 1
 
 apt update
-apt install -y passwd sudo git curl wget ca-certificates
+apt install -y passwd
 
 # ─────────────────────── BASE TOOLCHAIN ─────────────────────────────
 sudo -u "$USERNAME" bash <<'USERBLOCK'
