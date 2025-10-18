@@ -28,7 +28,7 @@ sudo apt install -y --no-install-recommends \
 # ─────────────────────── XORG + INTEL VIDEO ─────────────────────────
 sudo apt install -y --no-install-recommends \
   xserver-xorg-core xserver-xorg-video-intel xserver-xorg-input-libinput xinit \
-  libx11-dev libxft-dev libxinerama-dev
+  libx11-dev libxft-dev libxinerama-dev x11-xserver-utils
 
 # ─────────────────────── AUDIO + BLUETOOTH ──────────────────────────
 sudo apt install -y --no-install-recommends \
