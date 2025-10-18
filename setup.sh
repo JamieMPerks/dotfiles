@@ -124,6 +124,9 @@ command = "tuigreet --cmd startx --remember --time"
 user = "greeter"
 EOF
 
+# Disable getty@tty1 so greetd can take it
+sudo systemctl disable --now getty@tty1.service 2>/dev/null || true
+
 # ──────────────  Create PAM configuration for greetd  ──────────────
 sudo tee /etc/pam.d/greetd >/dev/null <<'EOF'
 # PAM service for greetd (TUI login manager)
