@@ -1,0 +1,27 @@
+#!/bin/sh
+# ~/.xinitrc — starts DWM session
+
+setxkbmap us
+export PATH="$HOME/.local/bin:$PATH"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export DISPLAY=:0
+
+if command -v gnome-keyring-daemon >/dev/null 2>&1; then
+    eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
+    export SSH_AUTH_SOCK
+fi
+
+if command -v /usr/libexec/polkit-lxqt-authentication-agent-1 >/dev/null 2>&1; then
+    /usr/libexec/polkit-lxqt-authentication-agent-1 &
+elif command -v /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 >/dev/null 2>&1; then
+    /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
+fi
+
+if [ -x "$HOME/.local/bin/autostart" ]; then
+    "$HOME/.local/bin/autostart" &
+fi
+
+(sleep 2 && "$HOME/.local/bin/dwmstatus") &
+exec dwm
