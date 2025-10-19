@@ -3,12 +3,17 @@
 # Tested on Debian 12+ – run as root
 set -e
 
-# ─────────────────────────  USER SETUP  ──────────────────────────────
+# ─────────────────────────  ROOT CHECK  ──────────────────────────────
 if [ "$(id -u)" -ne 0 ]; then
     echo "[!] Run this script as root."
     exit 1
 fi
 
+# ─────────────────────────  PATH FIX  ────────────────────────────────
+# Always work relative to where this script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# ─────────────────────────  USER SETUP  ──────────────────────────────
 read -rp "Enter your normal username (to create or update): " USERNAME
 id "$USERNAME" &>/dev/null || useradd -m -G users "$USERNAME"
 usermod -aG sudo "$USERNAME"
@@ -49,9 +54,7 @@ echo "[+] Polkit correctly installed → using polkitd + lxqt-policykit agent."
 
 # ─────────────────────────  GREETD SETUP  ────────────────────────────
 echo "[+] Installing greetd + tuigreet..."
-apt install -y --no-install-recommends cargo libpam0g-dev git
-
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+apt install -y --no-install-recommends cargo libpam0g-dev
 
 install -Dm644 "$SCRIPT_DIR/etc/greetd/config.toml" \
     /etc/greetd/config.toml
@@ -96,7 +99,8 @@ fi
 # ─────────────────────────  DWMSTATUS BUILD  ──────────────────────────
 echo "[+] Compiling dwmstatus..."
 install -d -m755 "$USER_HOME/src"
-cp src/dwmstatus-light.c "$USER_HOME/src/dwmstatus-light.c"
+cp "$SCRIPT_DIR/src/dwmstatus-light.c" "$USER_HOME/src/dwmstatus-light.c"
+sudo -u "$USERNAME" mkdir -p "$USER_HOME/.local/bin"
 sudo -u "$USERNAME" gcc -O2 -Wall "$USER_HOME/src/dwmstatus-light.c" \
    -o "$USER_HOME/.local/bin/dwmstatus" -lasound
 chmod +x "$USER_HOME/.local/bin/dwmstatus"
@@ -104,8 +108,10 @@ chown -R "$USERNAME:$USERNAME" "$USER_HOME/.local" "$USER_HOME/src"
 
 # ─────────────────────────  USER CONFIG FILES  ────────────────────────
 echo "[+] Installing user configs..."
-install -Dm755 home/xinit/.config/xorg/xinitrc  "$USER_HOME/.config/xorg/xinitrc"
-install -Dm755 home/xinit/.local/bin/autostart  "$USER_HOME/.local/bin/autostart"
+install -Dm755 "$SCRIPT_DIR/home/xinit/.config/xorg/xinitrc" \
+  "$USER_HOME/.config/xorg/xinitrc"
+install -Dm755 "$SCRIPT_DIR/home/xinit/.local/bin/autostart" \
+  "$USER_HOME/.local/bin/autostart"
 ln -sf "$USER_HOME/.config/xorg/xinitrc" "$USER_HOME/.xinitrc"
 chown -R "$USERNAME:$USERNAME" "$USER_HOME/.config" "$USER_HOME/.local"
 
