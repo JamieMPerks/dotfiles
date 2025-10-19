@@ -49,11 +49,16 @@ echo "[+] Polkit correctly installed → using polkitd + lxqt-policykit agent."
 
 # ─────────────────────────  GREETD SETUP  ────────────────────────────
 echo "[+] Installing greetd + tuigreet..."
-apt install -y --no-install-recommends cargo libpam0g-dev
+apt install -y --no-install-recommends cargo libpam0g-dev git
 
-install -Dm644 etc/greetd/config.toml            /etc/greetd/config.toml
-install -Dm644 etc/pam.d/greetd                  /etc/pam.d/greetd
-install -Dm644 etc/systemd/system/greetd.service /etc/systemd/system/greetd.service
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+install -Dm644 "$SCRIPT_DIR/etc/greetd/config.toml" \
+    /etc/greetd/config.toml
+install -Dm644 "$SCRIPT_DIR/etc/pam.d/greetd" \
+    /etc/pam.d/greetd
+install -Dm644 "$SCRIPT_DIR/etc/systemd/system/greetd.service" \
+    /etc/systemd/system/greetd.service
 
 id greeter 2>/dev/null || useradd -r -s /usr/sbin/nologin greeter
 usermod -aG video,audio,input,tty greeter
